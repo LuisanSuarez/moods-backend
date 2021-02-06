@@ -36,7 +36,23 @@ const methods = () => {
     });
   }
 
-  return { loadData, getAllTracks };
+  function deleteAll() {
+    return new Promise(async (resolve, reject) => {
+      const client = new MongoClient(uri);
+      try {
+        await client.connect();
+        const db = client.db(dbName);
+        const removed = await db.collection("testUser").drop();
+
+        resolve(removed);
+        client.close();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  return { loadData, getAllTracks, deleteAll };
 };
 
 module.exports = methods();
