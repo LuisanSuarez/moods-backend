@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-const user = process.env.DEV_USER || testUser;
+const user = process.env.DEV_USER || "testUser";
 
 const auth = require("./routes/auth");
 const api = require("./routes/api");
