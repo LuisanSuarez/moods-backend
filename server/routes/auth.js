@@ -107,7 +107,7 @@ router.get("/callback", function (req, res) {
 
         // we can also pass the token to the browser to make requests from there
         res.redirect(
-          "http://localhost:3000/dashboard"
+          "http://localhost:3000/dashboard/play"
           // "../#" +
           //   querystring.stringify({
           //     access_token: access_token,
@@ -129,6 +129,10 @@ router.get("/callback", function (req, res) {
 router.get("/refresh_token", function (req, res) {
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
+  console.log("req.query:", req.query);
+  console.log("keys:", Object.keys(req));
+  console.log("originalUrl:", req.params);
+  console.log({ refresh_token });
   var authOptions = {
     url: "https://accounts.spotify.com/api/token",
     headers: {
