@@ -1,7 +1,6 @@
 require("dotenv").config();
 const MongoClient = require("mongodb").MongoClient;
 const db = require("./methods");
-const data = require("./mockData");
 
 const cors = require("cors");
 const bodyParser = require("body-parser");
