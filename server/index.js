@@ -1,6 +1,4 @@
 require("dotenv").config();
-const MongoClient = require("mongodb").MongoClient;
-const db = require("./methods");
 
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -41,35 +39,9 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-const user = process.env.DEV_USER || "testUser";
 
 const auth = require("./routes/auth");
 const api = require("./routes/api");
-
-const uri = `mongodb+srv://luisan:${process.env.DB_PASSWORD}@moods.hfxeh.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-console.log(uri);
-async function main() {
-  const client = new MongoClient(uri, { useNewUrlParser: true });
-  try {
-    await client.connect();
-  } catch (error) {
-    console.log(
-      "\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~  CLIENT CONNECTION ERROR  ~~~\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \n\n"
-    );
-    console.error(error);
-  }
-
-  try {
-    const results = await db.loadData(user, data);
-    assert.equal(data.length, results.insertedCount);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    client.close();
-  }
-}
-
-// main();
 
 app.use("/auth", auth);
 app.use("/api", api);
@@ -78,6 +50,4 @@ app.get("/", (req, res) => {
   res.send("SPOTIFY MOODS BACKEND");
 });
 
-app.listen(PORT, () => console.log(`Gator app listening on port ${PORT}!`));
-
-//change
+app.listen(PORT, () => console.log(`Moods listening on port ${PORT}!`));

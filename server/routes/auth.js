@@ -1,4 +1,3 @@
-const PORT = process.env.PORT || 8880;
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = process.env.REDIRECT_URI;
@@ -7,7 +6,7 @@ const express = require("express");
 const router = express.Router();
 
 const querystring = require("querystring");
-const request = require("request"); // "Request" library
+const request = require("request");
 
 let access_token;
 let refresh_token;
@@ -26,7 +25,6 @@ const generateRandomString = function (length) {
 };
 
 router.get("/login", function (req, res) {
-  console.log("login");
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -55,7 +53,6 @@ router.get("/login", function (req, res) {
 router.get("/callback", function (req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
-  console.log("callbackings");
 
   var code = req.query.code || null;
   var state = req.query.state || null;
@@ -87,23 +84,15 @@ router.get("/callback", function (req, res) {
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        console.log("body.expires_in:", body.expires_in);
         access_token = body.access_token;
         refresh_token = body.refresh_token;
         expires_in = body.expires_in;
-        // localStorage.setItem("access_token", JSON.stringify(access_token));
-        // localStorage.setItem("refresh_token", JSON.stringify(refresh_token));
 
         var options = {
           url: "https://api.spotify.com/v1/me",
           headers: { Authorization: "Bearer " + access_token },
           json: true,
         };
-        // use the access token to access the Spotify Web API
-        request.get(options, function (error, response, body) {
-          console.log("get request");
-          console.log({ body });
-        });
 
         // we can also pass the token to the browser to make requests from there
         res.redirect(
@@ -129,10 +118,6 @@ router.get("/callback", function (req, res) {
 router.get("/refresh_token", function (req, res) {
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
-  console.log("req.query:", req.query);
-  console.log("keys:", Object.keys(req));
-  console.log("originalUrl:", req.params);
-  console.log({ refresh_token });
   var authOptions = {
     url: "https://accounts.spotify.com/api/token",
     headers: {
@@ -158,13 +143,11 @@ router.get("/refresh_token", function (req, res) {
 });
 
 router.get("/tokens", function (req, res) {
-  console.log("GET TOKENS");
   const response = {
     access_token,
     refresh_token,
     expires_in,
   };
-  console.log({ response });
   res.send(response);
 });
 
