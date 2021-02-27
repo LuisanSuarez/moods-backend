@@ -12,6 +12,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.11.15",
+    "node-localstorage": "^2.1.6",
     "querystring": "^0.2.0",
     "request": "^2.88.2"
   },

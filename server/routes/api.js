@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const methods = require("../methods");
+const fs = require("fs");
 
-const collection = "testUser";
-const allSongs = "testUser";
+const collection = "allTracks";
+const allSongs = "allTracks";
 
 router.get("/getAllTracks", async function (req, res) {
   let tracks;
@@ -80,7 +81,6 @@ router.post("/loadTracksFromPlaylist", async function (req, res) {
 router.post("/loadTags", async function (req, res) {
   const { newTag, newTags, trackId } = req.body;
   const result = {};
-  const collection = "testUser";
   const filter = { id: trackId };
   const newSong = { id: trackId };
   const data = { tags: newTags };
@@ -105,7 +105,6 @@ router.post("/loadTags", async function (req, res) {
 router.post("/removeTags", async function (req, res) {
   const { deletedTag, newTags, trackId } = req.body;
   const result = {};
-  const collection = "testUser";
   const filter = { id: trackId };
   const newSong = { id: trackId };
   const data = { tags: newTags };
@@ -175,6 +174,7 @@ router.get("/getAllPlaylists", async function (req, res) {
 
 router.get("/getPlaylist", async function (req, res) {
   const { id } = req.query;
+
   let playlist;
   try {
     playlist = await methods.get(id);
@@ -194,7 +194,7 @@ router.get("/getUntaggedSongs", async function (req, res) {
     playlist = await methods.get(collection, { tags: { $in: [[], null] } });
   } catch (error) {
     console.error("~~~~~~~~~~~~~~~~~~~~~");
-    console.error("~~~  GET Playlist Error ~~~");
+    console.error("~~~  GET Untagged Songs Error ~~~");
     console.error("~~~~~~~~~~~~~~~~~~~~~\n\n");
     console.error(error);
     res.send(error);

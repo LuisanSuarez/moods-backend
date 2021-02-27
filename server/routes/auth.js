@@ -1,7 +1,9 @@
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = process.env.REDIRECT_URI;
+const secret = process.env.CRYPTO_SECRET;
 
+const crypto = require("crypto");
 const express = require("express");
 const router = express.Router();
 
@@ -30,6 +32,7 @@ router.get("/login", function (req, res) {
 
   // your application requests authorization
   var scope = `
+
       streaming  
       user-read-email
       user-read-private 
@@ -53,7 +56,6 @@ router.get("/login", function (req, res) {
 router.get("/callback", function (req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
-
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -94,15 +96,26 @@ router.get("/callback", function (req, res) {
           json: true,
         };
 
-        // we can also pass the token to the browser to make requests from there
-        res.redirect(
-          "http://localhost:3000/dashboard/play"
-          // "../#" +
-          //   querystring.stringify({
-          //     access_token: access_token,
-          //     refresh_token: refresh_token,
-          //   })
-        );
+        request.get(options, function (error, response, body) {
+          const data = body.id;
+          const dbName = crypto
+            .createHmac("sha256", secret)
+            .update(data)
+            .digest("hex")
+            .slice(12, 36);
+          // we can also pass the token to the browser to make requests from there
+          res.redirect(
+            process.env.HOST +
+              "/dashboard/play/" +
+              // "../#" +
+              querystring.stringify({
+                padding: "padding",
+                access_token: access_token,
+                refresh_token: refresh_token,
+                dbName: dbName,
+              })
+          );
+        });
       } else {
         res.redirect(
           "/#" +

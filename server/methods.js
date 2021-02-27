@@ -1,11 +1,15 @@
-const { MongoClient, ObjectID } = require("mongodb");
+const { MongoClient } = require("mongodb");
+const fs = require("fs");
+const { LocalStorage } = require("node-localstorage");
+localStorage = new LocalStorage("./scratch");
 
 const methods = () => {
   const uri = `mongodb+srv://luisan:${process.env.DB_PASSWORD}@moods.hfxeh.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-  const dbName = process.env.DB_NAME;
-  const collection = "testUser";
+  let dbName;
+  const collection = "allTracks";
 
   function getTracks(query = {}) {
+    dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri);
       try {
@@ -22,6 +26,7 @@ const methods = () => {
   }
 
   function get(collection, query = {}) {
+    dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri);
       try {
@@ -38,6 +43,7 @@ const methods = () => {
   }
 
   function getTags() {
+    dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri);
       try {
@@ -54,6 +60,7 @@ const methods = () => {
   }
 
   function getSongTags(query) {
+    dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri);
       try {
@@ -70,6 +77,7 @@ const methods = () => {
   }
 
   function loadData(collection, data) {
+    dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri, { useNewUrlParser: true });
       try {
@@ -86,6 +94,7 @@ const methods = () => {
   }
 
   function update(collection, filter, data) {
+    dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri, { useNewUrlParser: true });
       try {
@@ -104,6 +113,7 @@ const methods = () => {
   }
 
   function updateBulk(collection, data) {
+    dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri, { useNewUrlParser: true });
       try {
@@ -137,7 +147,7 @@ const methods = () => {
     });
   }
 
-  function deleteAll() {
+  function deleteAll(dbName) {
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri);
       try {
