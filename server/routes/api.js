@@ -23,7 +23,7 @@ router.get("/getAllTracks", async function (req, res) {
 router.get("/getTracksBulk", async function (req, res) {
   let { playlists } = req.query;
   playlists = playlists ? playlists : [];
-
+  console.log({ playlists });
   let idsArray;
   if (typeof playlists[0] === "string") {
     idsArray = playlists.map(item => JSON.parse(item).id);
@@ -32,6 +32,7 @@ router.get("/getTracksBulk", async function (req, res) {
   }
   const query = { _id: { $in: idsArray } };
   let tracks;
+  console.log({ query });
   try {
     tracks = await methods.get(allSongs, query);
   } catch (error) {
@@ -317,7 +318,7 @@ router.get("/getTracksFromTag", async function (req, res) {
     console.error("~~~~~~~~~~~~~~~~~~~~~\n\n");
     console.error(error);
   }
-  result = result.map(uri => uri.id);
+  // result = result.map(uri => uri.id);
   res.send(result);
 });
 
