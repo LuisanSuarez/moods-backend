@@ -6,6 +6,7 @@ const fs = require("fs");
 const collection = "allTracks";
 const allSongs = "allTracks";
 
+// don't think we're using this. can probably delete
 router.get("/getAllTracks", async function (req, res) {
   let tracks;
   try {
@@ -70,7 +71,7 @@ router.post("/loadTracksFromPlaylist", async function (req, res) {
     result = await methods.updateBulk(collection, tracks);
   } catch (error) {
     console.error("~~~~~~~~~~~~~~~~~~~~~");
-    console.error("~~~  HEADER ~~~");
+    console.error("~~~  loadTracksFromPlaylist ~~~");
     console.error("~~~~~~~~~~~~~~~~~~~~~\n\n");
     console.error(error);
     console.error(error.result.result.writeErrors);
@@ -190,9 +191,16 @@ router.get("/getPlaylist", async function (req, res) {
 });
 
 router.get("/getUntaggedSongs", async function (req, res) {
+  const { limit, skip } = req.query;
+  const query = { tags: { $in: [[], null] } };
   let playlist;
   try {
-    playlist = await methods.get(collection, { tags: { $in: [[], null] } });
+    playlist = await methods.get(
+      collection,
+      query,
+      limit * 1 || undefined,
+      skip * 1 || undefined
+    );
   } catch (error) {
     console.error("~~~~~~~~~~~~~~~~~~~~~");
     console.error("~~~  GET Untagged Songs Error ~~~");

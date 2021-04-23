@@ -25,14 +25,18 @@ const methods = () => {
     });
   }
 
-  function get(collection, query = {}) {
+  function get(collection, query = {}, limit = 20, skip = 0) {
     dbName = localStorage.getItem("dbName");
     return new Promise(async (resolve, reject) => {
       const client = new MongoClient(uri);
       try {
         await client.connect();
         const db = client.db(dbName);
-        let result = db.collection(collection).find(query);
+        let result = db
+          .collection(collection)
+          .find(query)
+          .skip(skip)
+          .limit(limit);
         result = await result.toArray();
         resolve(result);
         client.close();
